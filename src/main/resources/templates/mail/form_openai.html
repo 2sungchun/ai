@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html layout:decorate="~{layout}"> <!-- layout.html 상속 -->
+  <div layout:fragment="content" style="width: 80%; margin: 30px auto; text-align: center;">
+  
+    <script>
+        window.onload = () => {
+            // 번역되기전 변수
+            let title_src_tag = document.getElementById('title_src');
+            let content_src_tag = document.getElementById('content_src');
+            let language_tag = document.getElementById('language');
+
+            // 번역된값 저장 변수
+            let title_tag = document.getElementById('title');
+            let content_tag = document.getElementById('content');
+            
+            let translator_tag = document.getElementById('translator');
+            let result_animation_tag = document.getElementById('result_animation');
+            let send_tag = document.getElementById('send');
+
+            translator_tag.addEventListener('click', async function() {
+                let title = title_src_tag.value;
+                let content = content_src_tag.value;
+                let language = language_tag.value;
+
+                fetch("/mail/translator", {  
+                    method: 'post',  // get, post
+                    headers: {
+                        "Content-Type": "application/json"
+                    },
+                    body: JSON.stringify({title, content, language})
+                })
+                .then((response) => response.json())
+                .then((data) => {
+                    // -> result: {'res': {'title': 'Thank you for your order.', 'content': .....
+                    console.log("-> data['res']['title']:" +data['res']['title']);
+
+                    title_tag.value = data['res']['title'];
+                    content_tag.value = data['res']['content'];
+
+                    result_animation_tag.innerHTML = "";
+                });
+
+                // 응답 오기전에 실행 코드
+                result_animation_tag.innerHTML = "<img src='/images/progress.gif' style='width: 18px;'>";
+                result_animation_tag.style.textAlign = 'left';
+
+            })
+            
+        }
+
+        function send_mail(f) {
+            let panel = document.getElementById("panel");
+            panel.innerHTML = "메일을 전송 중입니다...";
+
+            f.submit();
+        }
+    </script>
+
+    <div style='width: 70%; margin: 0px auto;'>
+        <div class='title_line'>mail 쓰기(번역 지원)</div>
+        <form name='frm' method='post' action="/mail/send">
+            수신: <input tpye="text" name="receiver" style="width: 37.5%; margin-bottom: 10px;" 
+                         value="testcell2014@studydesk.co.kr" autofocus="autofocus" tabindex="1">
+            발신: <input tpye="text" name="from" style="width: 37.5%; margin-bottom: 10px;" 
+                         value="testcell2014@gmail.com" tabindex="2"><br>
+            제목: <input tpye="text" id="title_src" name="title_src" style="width: 80%; margin-bottom: 10px;" 
+                         value="주문해주셔서 감사합니다." tabindex="3"><br>
+            <textarea id="content_src" name="content_src" style="width: 90%; height:200px; padding: 5px;">
+주문해주셔서 감사합니다!
+주문하신 내역은 다음과 같습니다.
+자세한 사항은 나의 주문>전체주문내역 에서 확인하실 수 있습니다.        
+도서명: 'ChatAPI 활용'
+가격: 25,000 원
+결재 방법: 신용 카드
+            </textarea><br>
+
+            <div class="d-flex justify-content-center" style="margin: 10px 0px;">
+                <select id="language" style='margin-right: 5px;'>
+                    <option value="한글" selected>한글</option>
+                    <option value="영어" selected>영어</option>
+                    <option value="일본어">일본어</option>
+                    <option value="프랑스어">프랑스어</option>
+                    <option value="터키어">터키어</option>
+                    <option value="사우디아라비아">사우디아라비아</option>
+                </select>
+                <button type="button" id="translator" class="btn btn-primary btn-sm" style='margin-right: 5px;'>번역하기</button> 
+                <span id='result_animation' style="width: 20px"></span>
+            </div>
+            
+            제목: <input tpye="text" id="title" name="title" style="width: 80%; margin-bottom: 10px;" value=""><br>
+            <textarea id="content" name="content" style="width: 90%; height:200px; padding: 5px;"></textarea><br>
+            <button type="button" id='send' class="btn btn-primary btn-md" onclick="send_mail(this.form)">번역된 내용 메일 전송</button>
+            <span id='panel' style='width: 40%; margin: 10px auto; background-color: beige;'></span> <!-- 전송 메시지-->
+            <br>
+        </form>
+    </div>
+
+  </div>
+</html>

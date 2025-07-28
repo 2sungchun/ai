@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html layout:decorate="~{layout}"> <!-- layout.html 상속 -->
+  <div layout:fragment="content" style="width: 80%; margin: 50px auto; text-align: center;">
+  
+    <script>
+      window.onload = () => {
+        send.addEventListener("click", async function () {
+          let prompt = document.getElementById("prompt").value;
+          // alert(prompt);
+          // return;
+  
+          let panel = document.getElementById("panel");
+          panel.innerHTML = '<img src="/images/progress.gif" style="width: 5%; margin-top: 20px;">'; 
+          panel.style.display = "block"; // 태그 출력
+  
+          let result = document.getElementById("result");
+          // result.style.display = "none";  // 태그 감추기
+  
+          const response = await fetch("/openai/member_img", {
+              "method": "post",
+              "headers": {
+                  "Content-Type": "application/json"
+              },
+              body: JSON.stringify({prompt}) // 보내는 데이터, {"prompt":prompt}, object -> json
+          });
+          
+          const data = await response.json(); // json 형식으로 데이터가 들어오지 않음.
+          console.log('-> 1) data: ' + data);
+          console.log('-> 2) typeof data: ' + typeof data);
+          console.log('-> 3) data: ' + data.file_name);
+          // '/', '\'로 구분된 확장자가 포함된 파일명 추출
+          let file_name = data.file_name.split(/[/\\]/).pop(); 
+          console.log('-> 4) data: ' + file_name);
+            
+          result.innerHTML = `<img src="/contents/storage/${file_name}" style="width: 100%;">`;
+          panel.style.display = "none"; // 진행 animation 숨기기
+          
+        });
+  
+        // 내용 삭제
+        clear.addEventListener("click", function () {
+          let prompt = document.getElementById("prompt");
+          prompt.value="";
+          prompt.focus();
+        });
+      }
+  
+    </script>
+  
+    <div style="margin: 10px auto; width: 90%;">
+      <h4>나의 이미지 생성하기(AI 서비스)</h4>
+      <textarea id="prompt" name="prompt" style="width: 100%; height: 150px;">
+        아래의 규칙에 맞는 이미지를 생성해줘.
+  
+  1. 빨간 장미가 핀 테라스.
+  2. 노란 파라솔과 하얀색 의자 4개가 배치되어 있음.
+  3. 초록색 인조 잔디가 깔끔하게 깔려있음.
+      
+      </textarea>  <br />
+    
+      <div style="margin-top: 10px auto; width: 100%; text-align: center;">
+        <button id="send" class="btn btn-info btn-sm">이미지 생성하기</button> 
+        <button id="clear" class="btn btn-info btn-sm">입력 내용 삭제하기</button> <br />
+      </div>
+      <div id="panel" style="margin-top: 10px; width: 100%; height: 50px; text-align: center; display: none;"></div>
+      <div id="result" style="margin: 10px auto; width: 40%; text-align: center;"></div>
+  
+    </div>
+
+</div>
+</html>
+
+

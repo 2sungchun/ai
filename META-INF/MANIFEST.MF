@@ -1,0 +1,2 @@
+Manifest-Version: 1.0
+Main-Class: dev.mvc.resort_v1sbm3c.ResortV1sbm3cApplication

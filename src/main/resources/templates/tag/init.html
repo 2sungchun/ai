@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+
+<html layout:decorate="~{layout}"> <!-- layout.html 상속-->
+<div layout:fragment="content">
+  <div class="title_line">태그의 초기값 및 입력값 제한</div>
+  
+  <div class="flex_div_center" style="width: 90%; margin: 0px auto;">  
+    <form name="frm" method="post" action="/tag/init">
+      <div>
+        <label style="margin-right: 10px; cursor: pointer;">
+          <input type="radio" name="radio_value" value="Y" th:checked="${radio_value=='Y'}">구독 설정(Yes)
+        </label> 
+        <label style="cursor: pointer;">
+          <input type="radio" name="radio_value" value="N" th:checked="${radio_value=='N'}">구독 취소(No)
+        </label>
+      </div>
+
+      <div class="content_body_bottom">
+        <label>
+          <input type="checkbox" name="code1" value="CODE1" th:checked="${isCode1?'checked':null}">서울
+        </label>
+        <label>
+          <input type="checkbox" name="code2" value="CODE2" th:checked="${isCode2?'checked':null}">인천
+        </label>
+        <label>
+          <input type="checkbox" name="code3" value="CODE3" th:checked="${isCode3?'checked':null}">경기
+        </label>
+      </div>
+
+      <div class="content_body_bottom">
+        <label>
+          <input type="checkbox" name="code4" value="서울" th:checked="${isCode4=='서울'?'checked':null}">서울
+        </label>
+        <label>
+          <input type="checkbox" name="code5" value="인천" th:checked="${isCode5=='인천'?'checked':null}">인천
+        </label>
+        <label>
+          <input type="checkbox" name="code6" value="경기" th:checked="${isCode6=='경기'?'checked':null}">경기
+        </label>
+      </div>
+      
+      <div class="content_body_bottom">
+        <label>
+          근무 지역을 선택하세요
+        </label>
+        <select id="area" name="area">
+          <option value="A01" th:selected="${select_value=='A01'}">서울</option>
+          <option value="A02" th:selected="${select_value=='A02'}">인천</option>
+          <option value="A03" th:selected="${select_value=='A03'}">경기</option>
+          <option value="A04" th:selected="${select_value=='A04'}">강원</option>
+          <option value="A05" th:selected="${select_value=='A05'}">충청</option>
+        </select>
+      </div>      
+
+      <div class="content_body_bottom">
+        <label>
+          근무 날짜를 선택하세요
+        </label>
+        <input type="date" id="rdate" name="rdate" th:value="${rdate}">
+      </div>
+      
+      <div class="content_body_bottom">
+        <button type="submit" class="btn btn-primary">저장</button> 
+      </div>
+    </form>
+  </div>  
+
+</div>
+</html>
+
